@@ -1,0 +1,384 @@
+#DS_1
+
+import pandas as pd
+dataset = pd.read_csv(r'https://github.com/datasciencedojo/datasets/raw/master/titanic.csv')
+
+dataset.head()
+
+dataset.isnull().sum()
+
+dataset.describe()
+
+dataset.dtypes
+
+dataset['Fare'] = dataset['Fare'].fillna(0).astype('int64')
+dataset['Age'] = dataset['Age'].fillna(0).astype('int64')
+dataset.dtypes
+
+dataset['Sex'].replace(['female','male'],[0,1], inplace=True)
+dataset
+
+**************************************************************************************************************************
+DS_2
+
+import pandas as pd
+import numpy as np
+df = pd.read_csv('https://github.com/YBI-Foundation/Dataset/raw/a6bcba4b6f9b87d8f924df1dacad300785571cfe/Titanic.csv')
+df.head(10)
+
+df.info()
+
+df.describe()
+
+df.isnull()
+
+df.isnull().sum()
+
+df.dtypes
+
+df.age.astype('float')
+
+df.dtypes
+
+ab = pd.notnull(df['sex']) 
+
+df[ab]
+
+df['age'].fillna('Null', inplace= True)
+df[10:25]
+
+df.replace(to_replace = np.nan , value = 000)
+
+df1 = df.dropna()
+
+df1 = df.dropna(axis=0, how='any')
+
+df.columns
+
+import seaborn as sbn
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10,5))
+sbn.histplot(x=df['fare'])
+
+df[df['fare']> 500]
+
+df.drop([49,50,183,302], inplace=True)
+
+df
+
+****************************************************************************************************************************************
+DS_3
+
+import pandas as pd
+df = pd.read_csv('https://github.com/sudarshan-koirala/Salary-Prediciton-based-on-Years-of-Experience/raw/master/Salary_Data.csv')
+df.head()
+df.info()
+df.describe()
+df.min()
+df.max()
+df.mean()
+df.median()
+df.std()
+df.groupby(['YearsExperience']).count()
+
+#2
+iris = pd.read_csv('https://github.com/YBI-Foundation/Dataset/raw/main/IRIS.csv')
+
+iris.head()
+iris.groupby(['species']).mean()
+iris.groupby(['species']).std()
+iris.groupby(['species']).describe().transpose()
+iris.describe()
+
+*********************************************************************************************************************************
+DS_4
+
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+
+#to download dataset --> https://www.kaggle.com/code/prasadperera/the-boston-housing-dataset/input
+df = pd.read_csv("housing4.csv")
+
+df.head()
+df.shape
+df.info()
+df.isnull().sum()
+df.columns
+df.describe()
+
+X = df.drop('MEDV',axis=1)
+y = df['MEDV']
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.10, random_state=101)
+
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(X_train,y_train)
+
+test_predictions = model.predict(X_test)
+
+test_predictions
+
+from sklearn.metrics import mean_absolute_error,mean_squared_error
+
+MAE = mean_absolute_error(y_test,test_predictions)
+MSE = mean_squared_error(y_test,test_predictions)
+RMSE = np.sqrt(MSE)
+
+MAE
+
+MSE
+
+RMSE
+
+df.iloc[[50]]
+testing=df.iloc[[50]].drop('MEDV',axis=1)
+testing_prediction = model.predict(testing)
+testing_prediction
+
+*****************************************************************************************************************************************
+DS_5
+
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+
+#to dowload dataset --> https://www.kaggle.com/datasets/rakeshrau/social-network-ads
+df = pd.read_csv("Social_Network_Ads.csv")
+
+df.head(10)
+
+df.info()
+df.describe()
+df['Purchased'].unique()
+
+df['Purchased'].value_counts()
+
+df.columns
+
+df['Sex_male']=pd.get_dummies(df['Gender'],drop_first=True)
+df
+
+X = df.drop(['User ID','Purchased','Gender'],axis=1)
+y = df['Purchased']
+
+X
+
+y
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=101)
+
+scaler = StandardScaler()
+scaled_X_train = scaler.fit_transform(X_train)
+scaled_X_test = scaler.transform(X_test)
+
+from sklearn.linear_model import LogisticRegressionCV
+log_model = LogisticRegressionCV()
+log_model.fit(scaled_X_train,y_train)
+
+y_pred = log_model.predict(scaled_X_test)
+
+from sklearn.metrics import confusion_matrix,classification_report,plot_confusion_matrix
+confusion_matrix(y_test,y_pred)
+
+plot_confusion_matrix(log_model,scaled_X_test,y_test)
+
+print(classification_report(y_test,y_pred))
+
+X_test.iloc[10]
+
+y_test.iloc[10]
+
+log_model.predict([X_test.iloc[10]])
+***********************************************************************************************************************************************
+DS_6
+
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+
+#to download dataset --> https://www.kaggle.com/code/jchen2186/machine-learning-with-iris-dataset/input
+df = pd.read_csv("IRIS.csv")
+
+df.head()
+df.shape
+df['species'].value_counts()
+df.info()
+
+X = df.drop('species',axis=1)
+y = df['species']
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3)
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+from sklearn.naive_bayes import GaussianNB
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+
+y_pred = classifier.predict(X_test) 
+y_pred
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+from sklearn.metrics import accuracy_score 
+print ("Accuracy : ", accuracy_score(y_test, y_pred))
+cm
+
+from sklearn.metrics import confusion_matrix,classification_report,plot_confusion_matrix
+plot_confusion_matrix(classifier,X_test,y_test)
+
+print(classification_report(y_test,y_pred))
+
+df.iloc[11]
+
+X.iloc[11]
+
+y.iloc[11]
+
+testing = classifier.predict([[4.8,3,4,1.6]]) 
+
+testing
+
+*****************************************************************************************************************************************
+DS_7
+
+#Tokenization
+import nltk
+nltk.download('punkt')
+
+word_data = "It originated from the idea that there are readers who prefer learning new skills from the comforts of their drawing rooms"
+nltk_tokens = nltk.word_tokenize(word_data)
+print (nltk_tokens)
+
+# Stopwords removal
+import nltk
+nltk.download('stopwords')
+
+from nltk.corpus import stopwords
+en_stops = set(stopwords.words('english'))
+
+all_words = ['There', 'is', 'a', 'tree','near','the','river']
+for word in all_words: 
+    if word not in en_stops:
+        print(word)
+
+#Tagging words
+import nltk
+nltk.download('averaged_perceptron_tagger')
+
+text = nltk.word_tokenize("A Python is a serpent which eats eggs from the nest")
+tagged_text=nltk.pos_tag(text)
+print(tagged_text)
+
+# Steaming
+
+import nltk
+from nltk.stem.porter import PorterStemmer
+from nltk.stem.lancaster import LancasterStemmer
+from nltk.stem import SnowballStemmer 
+
+porter_stemmer = PorterStemmer()
+lanca_stemmer = LancasterStemmer()
+sb_stemmer = SnowballStemmer("english",)
+
+word_data = "Aging head of famous crime family decides to transfer his position to one of his subalterns" 
+# First Word tokenization
+nltk_tokens = nltk.word_tokenize(word_data)
+#Next find the roots of the word
+print ('***PorterStemmer****\n')
+for w_port in nltk_tokens:
+   print (("Actual: %s  || Stem: %s") % (w_port,porter_stemmer.stem(w_port)))
+
+print ('\n***LancasterStemmer****\n' )   
+for w_lanca in nltk_tokens:
+      print (("Actual: %s  || Stem: %s" ) % (w_lanca,lanca_stemmer.stem(w_lanca)))
+print ('\n***SnowballStemmer****\n')
+
+for w_snow in nltk_tokens:
+      print (("Actual: %s  || Stem: %s")  % (w_snow,sb_stemmer.stem(w_snow)))  
+
+******************************************************************************************************************************************
+DS_8
+
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+
+#to download dataset --> https://www.kaggle.com/code/biswajee/titanic-dataset/input?select=train.csv
+df = pd.read_csv('titanic_train.csv')
+
+df.head()
+df.info()
+df.columns
+
+df= df.drop(['PassengerId','Ticket'],axis=1)
+
+plt.figure(figsize=(12,8))
+sns.histplot(data=df['Fare'])
+plt.show()
+
+*********************************************************************************************************************************************
+DS_9
+
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+
+#to download dataset --> https://www.kaggle.com/code/biswajee/titanic-dataset/input?select=train.csv
+df = pd.read_csv('titanic_train.csv')
+
+df.head()
+df.info()
+df.columns
+
+df= df.drop(['PassengerId','Ticket'],axis=1)
+
+plt.figure(figsize=(10,6))
+sns.boxenplot(x='Age',y='Sex',data=df,hue='Survived')
+plt.show()
+
+*********************************************************************************************************************************************
+DS_10
+
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('IRIS.csv')
+
+df.head()
+
+df.info()
+
+sns.histplot(data=df,x=df['sepal_length'],hue=df['species'],bins=40)
+
+sns.histplot(data=df,x=df['sepal_width'],hue=df['species'],bins=40)
+
+sns.histplot(data=df,x=df['petal_length'],hue=df['species'],bins=40)
+
+sns.histplot(data=df,x=df['petal_width'],hue=df['species'],bins=40)
+
+sns.boxplot(data=df,x=df['sepal_length'],y=df['species'])
+
+sns.boxplot(data=df,x=df['sepal_width'],y=df['species'])
+
+sns.boxplot(data=df,x=df['petal_length'],y=df['species'])
+
+sns.boxplot(data=df,x=df['petal_width'],y=df['species'])
